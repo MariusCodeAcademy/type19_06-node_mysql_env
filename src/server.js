@@ -6,6 +6,13 @@ const app = express();
 
 const PORT = 3000;
 
+const dbConfig = {
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'type19_db',
+};
+
 // Middleware
 app.use(morgan('dev'));
 
@@ -17,12 +24,7 @@ app.get('/', function (req, res) {
 app.get('/api/posts', async (req, res) => {
   try {
     // prisijungti prie DB
-    const conn = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'type19_db',
-    });
+    const conn = await mysql.createConnection(dbConfig);
     // atlikti veikma
     const sql = 'SELECT * FROM `posts`';
     const [rows] = await conn.query(sql);
@@ -41,9 +43,25 @@ app.get('/api/posts', async (req, res) => {
 });
 
 // GET - /api/posts/5 - grazins 5 posta
-app.get('/api/posts/:pId', (req, res) => {
+app.get('/api/posts/:pId', async (req, res) => {
   try {
-    res.json('get single post');
+    const pId = +req.params.pId;
+    // prisijungti prie DB
+    const conn = await mysql.createConnection(dbConfig);
+    const sql = 'SELECT * FROM `posts` WHERE `post_id`=?';
+    // atlikti veikma
+    const [rows] = await conn.execute(
+      'SELECT * FROM `posts` WHERE `post_id`=?',
+      [pId]
+    );
+    console.log('rows ===', rows);
+    // ar radom tik viena irasa
+    if (rows.length === 1) {
+      res.json(rows[0]);
+      return;
+    }
+    // TODO: proper chekc
+    res.json('no posts');
   } catch (error) {
     console.log(error);
     console.log('klaida get sigle posts');

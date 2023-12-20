@@ -5,4 +5,4 @@ GET http://localhost:3000
 GET http://localhost:3000/api/posts
 ### Get Single post
 
-GET http://localhost:3000/api/posts/2
+GET http://localhost:3000/api/posts/6
