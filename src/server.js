@@ -26,14 +26,27 @@ app.get('/api/posts', async (req, res) => {
     // atlikti veikma
     const sql = 'SELECT * FROM `posts`';
     const [rows] = await conn.query(sql);
-    // console.log('rows ===', rows);
-
     // grazinti duomenis
     res.json(rows);
-    // atsijungti nuo DB
   } catch (error) {
     console.log(error);
     console.log('klaida get posts');
+    res.status(500).json({
+      msg: 'Something went wrong',
+    });
+  } finally {
+    // atsijungti nuo DB
+    if (conn) conn.end();
+  }
+});
+
+// GET - /api/posts/5 - grazins 5 posta
+app.get('/api/posts/:pId', (req, res) => {
+  try {
+    res.json('get single post');
+  } catch (error) {
+    console.log(error);
+    console.log('klaida get sigle posts');
     res.status(500).json({
       msg: 'Something went wrong',
     });
