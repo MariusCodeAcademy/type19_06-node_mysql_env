@@ -208,6 +208,24 @@ app.delete('/api/posts/:pId', async (req, res) => {
   }
 });
 
+// Update - /api/posts/:pId - update post
+app.put('/api/posts/:pId', async (req, res) => {
+  const { title, author } = req.body;
+  const pId = +req.params.pId;
+  // validacijos
+  const sql = `
+  UPDATE posts
+  SET title=?, author=?
+  WHERE post_id=?
+  LIMIT 1
+  `;
+  const [rowObj, error] = await dbQueryWithData(sql, [title, author, pId]);
+
+  console.log('error ===', error);
+
+  res.json(rowObj);
+});
+
 // 404
 app.use((req, res) => {
   res.status(404).json({

@@ -18,7 +18,7 @@ GET http://localhost:3000/api/posts
 
 ### Get Single post
 
-GET http://localhost:3000/api/posts/5
+GET http://localhost:3000/api/posts/3
 
 ### Create post
 
@@ -30,6 +30,15 @@ Content-Type: application/json
   "author": "James Rest", 
   "date": "2000-01-02", 
   "body": "This is some meanigful content"
+}
+### Update post
+
+PUT  http://localhost:3000/api/posts/3
+Content-Type: application/json
+
+{
+  "title": "Update update", 
+  "author": "James Rest 3000"
 }
 
 ### Delete Single post
