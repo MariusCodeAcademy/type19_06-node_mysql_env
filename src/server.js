@@ -103,33 +103,24 @@ app.get('/api/posts', async (req, res) => {
 
   console.log('error ===', error);
 
+  if (error) {
+    // turim klaida
+    console.log(error);
+    console.log('klaida get posts');
+    res.status(500).json({
+      msg: 'Something went wrong',
+    });
+    return;
+  }
+  // klaidu nera turim atsakyma is DB
   res.json(rows);
-  // let conn;
-  // try {
-  //   // prisijungti prie DB
-  //   conn = await mysql.createConnection(dbConfig);
-  //   // atlikti veikma
-  //   const sql = 'SELECT * FROM `posts`';
-  //   const [rows] = await conn.query(sql);
-  //   // grazinti duomenis
-  //   res.json(rows);
-  // } catch (error) {
-  //   console.log(error);
-  //   console.log('klaida get posts');
-  //   res.status(500).json({
-  //     msg: 'Something went wrong',
-  //   });
-  // } finally {
-  //   // atsijungti nuo DB
-  //   if (conn) conn.end();
-  // }
 });
 
 // GET - /api/posts/5 - grazins 5 posta
 app.get('/api/posts/:pId', async (req, res) => {
+  const pId = +req.params.pId;
   let conn;
   try {
-    const pId = +req.params.pId;
     // prisijungti prie DB
     conn = await mysql.createConnection(dbConfig);
     const sql = 'SELECT * FROM `posts` WHERE `post_id`=?';
