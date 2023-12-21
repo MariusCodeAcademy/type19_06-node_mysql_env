@@ -18,13 +18,13 @@ async function getDBData(sql) {
   }
 }
 
-async function dbQueryWithData(sql, argArr) {
+async function dbQueryWithData(sql, argArr = []) {
   let conn;
   try {
     // prisijungti prie DB
     conn = await mysql.createConnection(dbConfig);
     // atlikti veikma
-    const [rows] = await conn.query(sql);
+    const [rows] = await conn.execute(sql, argArr);
     // grazinti duomenis
     return [rows, null];
   } catch (error) {
@@ -42,4 +42,5 @@ async function dbQueryWithData(sql, argArr) {
 
 module.exports = {
   getDBData,
+  dbQueryWithData,
 };

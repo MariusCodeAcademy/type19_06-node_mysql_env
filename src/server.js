@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
 const dbConfig = require('./config');
-const { getDBData } = require('./helper');
+const { getDBData, dbQueryWithData } = require('./helper');
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -118,35 +118,29 @@ app.get('/api/posts', async (req, res) => {
 
 // GET - /api/posts/5 - grazins 5 posta
 app.get('/api/posts/:pId', async (req, res) => {
+  const sql = 'SELECT * FROM `posts` WHERE `post_id`=?';
   const pId = +req.params.pId;
-  let conn;
-  try {
-    // prisijungti prie DB
-    conn = await mysql.createConnection(dbConfig);
-    const sql = 'SELECT * FROM `posts` WHERE `post_id`=?';
-    // atlikti veikma
-    const [rows] = await conn.execute(
-      'SELECT * FROM `posts` WHERE `post_id`=?',
-      [pId]
-    );
-    console.log('rows ===', rows);
-    // ar radom tik viena irasa
-    if (rows.length === 1) {
-      res.json(rows[0]);
-      return;
-    }
-    // TODO: proper chekc
-    res.json('no posts');
-  } catch (error) {
+
+  const [rows, error] = await dbQueryWithData(sql, [pId]);
+
+  if (error) {
+    // turim klaida
     console.log(error);
-    console.log('klaida get sigle posts');
+    console.log('klaida get posts');
     res.status(500).json({
       msg: 'Something went wrong',
     });
-  } finally {
-    // atsijungti nuo DB
-    if (conn) conn.end();
+    return;
   }
+  if (rows.length === 1) {
+    res.json(rows[0]);
+    return;
+  }
+  if (rows.length === 0) {
+    res.status(404).json('not found');
+    return;
+  }
+  res.status(500).json('something wrong');
 });
 
 // POST - /api/posts/ - sukurti posta
