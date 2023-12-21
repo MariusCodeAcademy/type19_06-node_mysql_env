@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
 const dbConfig = require('./config');
+const { getDBData } = require('./helper');
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -97,25 +98,31 @@ app.get('/api/admin/init', async (req, res) => {
 
 // GET - /api/posts - grazins visus postus
 app.get('/api/posts', async (req, res) => {
-  let conn;
-  try {
-    // prisijungti prie DB
-    conn = await mysql.createConnection(dbConfig);
-    // atlikti veikma
-    const sql = 'SELECT * FROM `posts`';
-    const [rows] = await conn.query(sql);
-    // grazinti duomenis
-    res.json(rows);
-  } catch (error) {
-    console.log(error);
-    console.log('klaida get posts');
-    res.status(500).json({
-      msg: 'Something went wrong',
-    });
-  } finally {
-    // atsijungti nuo DB
-    if (conn) conn.end();
-  }
+  const sql = 'SELECT * FROM `posts`';
+  const [rows, error] = await getDBData(sql);
+
+  console.log('error ===', error);
+
+  res.json(rows);
+  // let conn;
+  // try {
+  //   // prisijungti prie DB
+  //   conn = await mysql.createConnection(dbConfig);
+  //   // atlikti veikma
+  //   const sql = 'SELECT * FROM `posts`';
+  //   const [rows] = await conn.query(sql);
+  //   // grazinti duomenis
+  //   res.json(rows);
+  // } catch (error) {
+  //   console.log(error);
+  //   console.log('klaida get posts');
+  //   res.status(500).json({
+  //     msg: 'Something went wrong',
+  //   });
+  // } finally {
+  //   // atsijungti nuo DB
+  //   if (conn) conn.end();
+  // }
 });
 
 // GET - /api/posts/5 - grazins 5 posta
