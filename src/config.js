@@ -1,10 +1,10 @@
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'type19_db',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 };
-console.log('dbConfig ===', dbConfig);
+// console.log('dbConfig ===', dbConfig);
 // reiksmes is .env
 
 // suinstaliuoti dotenv
@@ -14,3 +14,4 @@ console.log('dbConfig ===', dbConfig);
 // .env i gitignore
 
 // exportuoti dbConfig
+module.exports = dbConfig;
