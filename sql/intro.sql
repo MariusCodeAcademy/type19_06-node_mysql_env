@@ -12,8 +12,8 @@ CREATE TABLE posts
 
 -- Add one post 
 
-INSERT INTO `posts` 
-  (`title`, `author`, `date`, `body`) 
+INSERT INTO posts 
+  (title, author, date, body) 
   VALUES ('Post 5', 'Mike T', '2023-12-15', 'Post about Boxing from T. ');
 
 -- Create all posts
