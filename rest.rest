@@ -31,3 +31,7 @@ Content-Type: application/json
   "date": "2000-01-02", 
   "body": "This is some meanigful content"
 }
+
+### Delete Single post
+
+DELETE  http://localhost:3000/api/posts/2

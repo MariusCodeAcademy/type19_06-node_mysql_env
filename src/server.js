@@ -188,8 +188,35 @@ app.post('/api/posts/', async (req, res) => {
     if (conn) conn.end();
   }
 });
-// 404
 
+// DELETE - /api/posts/:pId - delete post
+app.delete('/api/posts/:pId', async (req, res) => {
+  let conn;
+  const pId = +req.params.pId;
+  try {
+    conn = await mysql.createConnection(dbConfig);
+    const delSql = `
+      DELETE FROM posts 
+      WHERE post_id=?
+      LIMIT 1
+    `;
+    // vygdyti uzklausa
+    const [rezObj] = await conn.execute(delSql, [pId]);
+
+    res.json(rezObj);
+  } catch (error) {
+    console.log(error);
+    console.log('klaida sukurti posta');
+    res.status(500).json({
+      msg: 'Something went wrong',
+    });
+  } finally {
+    // atsijungti nuo DB
+    if (conn) conn.end();
+  }
+});
+
+// 404
 app.use((req, res) => {
   res.status(404).json({
     msg: 'path not found',
