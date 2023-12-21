@@ -6,15 +6,10 @@ const app = express();
 
 const PORT = 3000;
 
-const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'type19_db',
-};
-
 // Middleware
 app.use(morgan('dev'));
+// igalinti json duomenis
+app.use(express.json());
 
 app.get('/', function (req, res) {
   res.send('Hello World');
@@ -155,7 +150,42 @@ app.get('/api/posts/:pId', async (req, res) => {
 });
 
 // POST - /api/posts/ - sukurti posta
+app.post('/api/posts/', async (req, res) => {
+  let conn;
 
+  // pasiimam atsiustas reiksmes
+  const { title, author, date, body } = req.body;
+
+  // validacijos
+  if (title.trim() === '') {
+    res.status(400).json({
+      err: 'title is required',
+    });
+    return;
+  }
+
+  try {
+    conn = await mysql.createConnection(dbConfig);
+    const sql = `INSERT INTO posts 
+    (title, author, date, body) 
+    VALUES (?,?,?,?)`;
+    const [rows] = await conn.execute(sql, [title, author, date, body]);
+    if (rows.affectedRows === 1) {
+      res.sendStatus(201);
+      return;
+    }
+    res.json({ msg: 'no afected rows' });
+  } catch (error) {
+    console.log(error);
+    console.log('klaida sukurti posta');
+    res.status(500).json({
+      msg: 'Something went wrong',
+    });
+  } finally {
+    // atsijungti nuo DB
+    if (conn) conn.end();
+  }
+});
 // 404
 
 app.use((req, res) => {
