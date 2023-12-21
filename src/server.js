@@ -213,6 +213,10 @@ app.put('/api/posts/:pId', async (req, res) => {
   const { title, author } = req.body;
   const pId = +req.params.pId;
   // validacijos
+
+  // patikrtin ar toks post existuoja
+  // jei neegzistuoja 404
+
   const sql = `
   UPDATE posts
   SET title=?, author=?
