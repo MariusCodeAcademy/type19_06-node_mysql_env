@@ -15,3 +15,13 @@ CREATE TABLE `type19_db`.`posts`
 INSERT INTO `posts` 
   (`title`, `author`, `date`, `body`) 
   VALUES ('Post 5', 'Mike T', '2023-12-15', 'Post about Boxing from T. ');
+
+-- Create all posts
+
+INSERT INTO `posts` (`post_id`, `title`, `author`, `date`, `body`) VALUES
+(1, 'Post 1', 'James Band', '2023-12-20', 'This is body of Post 1'),
+(2, 'Post 2', 'Jane Dow', '2023-12-01', 'Body of post 2'),
+(3, 'POST 3', 'James Band', '2023-12-04', 'Body about post 3'),
+(4, 'Post 4', 'Mike T', '2023-12-14', 'Post about Boxing from T. '),
+(5, 'Post 5', 'Mike T', '2023-12-15', 'Post about Boxing from T. '),
+(6, 'Post 6', 'Jane Dow', '2023-11-05', 'Post 6 about Jane');
